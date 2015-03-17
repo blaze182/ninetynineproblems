@@ -93,15 +93,17 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with invalid parameters' do
-      it 'does not save question to database' do
-        expect { post :create, question: attributes_for(:invalid_question) }.to_not change(Question, :count)
+      before { patch :update, id: question, question: {title: 'Sample title longer than 15 characters', body: nil} }
+
+      it 'does not save answer attributes to database' do
+        question.reload
+        expect(question.title).to eq "The title is minimum of 15 characters"
+        expect(question.body).to eq "MyText is definitely should be more than 30 characters"
       end
 
-      it do
-        post :create, question: attributes_for(:invalid_question)
-        should render_template :new
-      end
+      it { should render_template :edit }
     end
+
   end
 
   describe 'DELETE #destroy' do

@@ -1,12 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let (:answer) { create :answer }
+  let (:question_with_answers) { create :question_with_answers }
+  let (:question) { create :question }
 
   describe 'GET #index' do
-    let (:question_with_answers) { create :question_with_answers }
-
     before { get :index, question_id: question_with_answers }
+
+    it 'assigns question to @question' do
+      expect(assigns :question).to eq question_with_answers
+    end
 
     it 'populates an array of all answers for question' do
       expect(assigns :answers).to match_array(question_with_answers.answers)
@@ -15,105 +18,99 @@ RSpec.describe AnswersController, type: :controller do
     it { should render_template :index }
   end
 
-  # describe 'GET #show' do
-  #   before { get :show, id: question }
+  describe 'GET #new' do
+    before { get :new, question_id: question_with_answers }
 
-  #   it 'assigns the requested question to @question' do
-  #     expect(assigns :question).to eq question
-  #   end
+    it 'assigns question to @question' do
+      expect(assigns :question).to eq question_with_answers
+    end
 
-  #   it { should render_template :show }
-  # end
+    it 'assigns a new answer to @answer' do
+      expect(assigns :answer).to be_a_new(Answer)
+    end
 
-  # describe 'GET #new' do
-  #   before { get :new }
+    it { should render_template :new }
+  end
 
-  #   it 'assigns a new question to @question' do
-  #     expect(assigns :question).to be_a_new(Question)
-  #   end
+  describe 'GET #edit' do
+    before { get :edit, question_id: question_with_answers, id: question_with_answers.answers[0] }
 
-  #   it { should render_template :new }
-  # end
+    it 'assigns the requested answer to @answer' do
+      expect(assigns :answer).to eq question_with_answers.answers[0]
+    end
 
-  # describe 'GET #edit' do
-  #   before { get :edit, id: question }
+    it { should render_template :edit }
+  end
 
-  #   it 'assigns the requested question to @question' do
-  #     expect(assigns :question).to eq question
-  #   end
+  describe 'POST #create' do
+    context 'with valid parameters' do
+      it 'saves the new answer to database' do
+        expect { post :create, question_id: question, answer: attributes_for(:answer) }
+                                                      .to change(question.answers, :count).by(1)
+      end
 
-  #   it { should render_template :edit }
-  # end
+      it do
+        post :create, question_id: question, answer: attributes_for(:answer)
+        should redirect_to assigns :question
+      end
+    end
 
-  # describe 'POST #create' do
-  #   context 'with valid parameters' do
-  #     it 'saves the new question to database' do
-  #       expect { post :create, question: attributes_for(:question) }.to change(Question, :count).by(1)
-  #     end
+    context 'with invalid parameters' do
+      it 'does not save the new answer to database' do
+        expect { post :create, question_id: question, answer: attributes_for(:invalid_answer) }
+                                                      .to_not change(question.answers, :count)
+      end
 
-  #     it do
-  #       post :create, question: attributes_for(:question)
-  #       should redirect_to assigns :question
-  #     end
-  #   end
+      it do
+        post :create, question_id: question, answer: attributes_for(:invalid_answer)
+        should render_template :new
+      end
+    end
+  end
 
-  #   context 'with invalid parameters' do
-  #     it 'does not save the new question to database' do
-  #       expect { post :create, question: attributes_for(:invalid_question) }.to_not change(Question, :count)
-  #     end
+  describe 'PATCH #update' do
+    context 'with valid parameters' do
+      it 'assigns answer to @answer' do
+        patch :update, question_id: question_with_answers, id: question_with_answers.answers[0], answer: attributes_for(:answer)
+        expect(assigns :answer).to eq question_with_answers.answers[0]
+      end
 
-  #     it do
-  #       post :create, question: attributes_for(:invalid_question)
-  #       should render_template :new
-  #     end
-  #   end
-  # end
+      it 'alters answer attributes' do
+        new_body = 'This body actually should be longer than 30 characters'
 
-  # describe 'PATCH #update' do
-  #   context 'with valid parameters' do
-  #     it 'assigns the requested question to @question' do
-  #       patch :update, id: question, question: attributes_for(:question)
-  #       expect(assigns :question).to eq question
-  #     end
+        patch :update, question_id: question_with_answers, id: question_with_answers.answers[0], answer: {body: new_body}
+        question_with_answers.reload
+        expect(question_with_answers.answers[0].body).to eq new_body
+      end
 
-  #     it 'alters question attributes' do
-  #       new_title = 'Some new title, longer than 15 chars'
-  #       new_body = 'This body actually should be longer than 30 characters'
+      it do
+        patch :update, question_id: question_with_answers, id: question_with_answers.answers[0], answer: attributes_for(:answer)
+        should redirect_to question_with_answers
+      end
+    end
 
-  #       patch :update, id: question, question: { title: new_title, body: new_body }
-  #       question.reload
-  #       expect(question.title).to eq new_title
-  #       expect(question.body).to eq new_body
-  #     end
+    context 'with invalid parameters' do
+      before do
+        patch :update, question_id: question_with_answers, id: question_with_answers.answers[0], answer: {body: nil}
+      end
 
-  #     it do
-  #       patch :update, id: question, question: attributes_for(:question)
-  #       should redirect_to question
-  #     end
-  #   end
+      it 'does not save answer attributes to database' do
+        question_with_answers.reload
+        expect(question_with_answers.answers[0].body).to eq 'MyText that is longer, than 30 characters. Because answer should be'
+      end
 
-  #   context 'with invalid parameters' do
-  #     it 'does not save question to database' do
-  #       expect { post :create, question: attributes_for(:invalid_question) }.to_not change(Question, :count)
-  #     end
+      it { should render_template :edit }
+    end
+  end
 
-  #     it do
-  #       post :create, question: attributes_for(:invalid_question)
-  #       should render_template :new
-  #     end
-  #   end
-  # end
+  describe 'DELETE #destroy' do
+    it 'deletes answer' do
+      expect {delete :destroy, question_id: question_with_answers, id: question_with_answers.answers[0]}.to change(question_with_answers.answers, :count).by(-1)
+    end
 
-  # describe 'DELETE #destroy' do
-  #   before { question }
-
-  #   it 'deletes question' do
-  #     expect {delete :destroy, id: question}.to change(Question, :count).by(-1)
-  #   end
-
-  #   it do
-  #     delete :destroy, id: question
-  #     should redirect_to questions_path
-  #   end
-  # end
+    it do
+      delete :destroy, question_id: question_with_answers, id: question_with_answers.answers[0]
+      should redirect_to assigns :question
+    end
+  end
 end
