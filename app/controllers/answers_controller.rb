@@ -1,10 +1,6 @@
 class AnswersController < ApplicationController
-  before_action :load_question, only: [:index, :new, :create, :update, :destroy]
+  before_action :load_question, only: [:new, :create, :update, :destroy]
   before_action :load_answer, only: [:edit, :update, :destroy]
-
-  def index
-    @answers = @question.answers
-  end
 
   def new
     @answer = Answer.new
@@ -32,7 +28,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer.destroy
+    @answer.destroy!
     redirect_to @question
   end
 

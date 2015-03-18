@@ -4,20 +4,6 @@ RSpec.describe AnswersController, type: :controller do
   let (:question_with_answers) { create :question_with_answers }
   let (:question) { create :question }
 
-  describe 'GET #index' do
-    before { get :index, question_id: question_with_answers }
-
-    it 'assigns question to @question' do
-      expect(assigns :question).to eq question_with_answers
-    end
-
-    it 'populates an array of all answers for question' do
-      expect(assigns :answers).to match_array(question_with_answers.answers)
-    end
-
-    it { should render_template :index }
-  end
-
   describe 'GET #new' do
     before { get :new, question_id: question_with_answers }
 
