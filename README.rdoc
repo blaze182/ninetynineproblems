@@ -1,28 +1,8 @@
-== README
+== 99 Problems
+Questions and Answers education project for http://thinknetica.com
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Ruby <tt>2.2.1</tt>
 
-Things you may want to cover:
+Rails <tt>4.2.0</tt>
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+To run automated tests execute <tt>rspec</tt>
