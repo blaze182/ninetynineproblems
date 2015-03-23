@@ -8,7 +8,7 @@ feature 'Create question', %q{
   
   given(:user) {create :user}
 
-  scenario 'Authenticated user created question' do
+  scenario 'Authenticated user creates question' do
     sign_in user
 
     visit questions_path
