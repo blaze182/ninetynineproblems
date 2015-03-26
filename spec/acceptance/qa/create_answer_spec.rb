@@ -7,17 +7,36 @@ feature 'Create answer', %q{
 } do
 
   given(:user) {create :user}
-  given!(:question) {create :question}
+  given(:question) {create :question}
+  given(:answer) {build :answer}
 
-  scenario 'Authenticated user creates answer' do
-    sign_in user
+  describe 'Authenticated user' do
+    before {sign_in user}
     
-    visit questions_path
-    click_on question.title
-    fill_in 'Your answer', with: 'This is the answer bigger than 30 symbols'
-    click_on 'Post your answer'
-    expect(page).to have_content 'Your answer has successfully been added!'
-  end
-  scenario 'Unauthenticated user tries to create answer'
+    scenario 'Creates answer' do
+      visit question_path(question)
+      fill_in 'Your answer', with: answer.body
+      click_on 'Post your answer'
+      expect(page).to have_content 'Your answer has successfully been added!'
+      expect(page).to have_content answer.body
+    end
 
+    scenario 'Can see list of answers' do
+      answers = create_list(:answer, 5, question: question)
+      visit question_path(question)
+      answers.each{|answer| expect(page).to have_content answer.body}
+    end
+  end
+
+  describe 'Unauthenticated user' do
+    scenario 'Tries to create answer with no luck' do
+      visit question_path(question)
+      expect(page).not_to have_selector("input[type=submit][value='Post your answer']")
+    end
+    scenario 'Can see list of answers' do
+      answers = create_list(:answer, 5, question: question)
+      visit question_path(question)
+      answers.each{|answer| expect(page).to have_content answer.body}
+    end
+  end
 end

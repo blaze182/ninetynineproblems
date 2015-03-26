@@ -77,12 +77,12 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid parameters' do
       before do
-        patch :update, question_id: question_with_answers, id: question_with_answers.answers[0], answer: {body: nil}
+        patch :update, question_id: question_with_answers, id: question_with_answers.answers[0], answer: {body: 'short'}
       end
 
       it 'does not save answer attributes to database' do
         question_with_answers.reload
-        expect(question_with_answers.answers[0].body).to eq 'MyText that is longer, than 30 characters. Because answer should be'
+        expect(question_with_answers.answers[0].body).not_to eq 'short'
       end
 
       it { should render_template :edit }

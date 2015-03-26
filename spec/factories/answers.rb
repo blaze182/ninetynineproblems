@@ -1,6 +1,9 @@
 FactoryGirl.define do
+  sequence :body do |n|
+    "MyText that is longer, than 30 characters. Because answer should be. No.#{n}"
+  end
   factory :answer do
-    body "MyText that is longer, than 30 characters. Because answer should be"
+    body 
     question
   end
 

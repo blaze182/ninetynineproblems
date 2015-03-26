@@ -1,6 +1,4 @@
 p = @question.title
 p = @question.body
-/ - @question.answers.each do |answer|
-/   p = answer.body
 = render @question.answers
-= render "answers/form", question: @question, answer: @answer
+= render "answers/form", question: @question, answer: @answer if user_signed_in?
