@@ -6,9 +6,9 @@ class QuestionsController < ApplicationController
     @questions = Question.all
   end
 
-  # not necessary when it has view
-  # def show
-  # end
+  def show
+    @answer = Answer.new
+  end
   # def edit
   # end
 
@@ -31,6 +31,7 @@ class QuestionsController < ApplicationController
       flash[:notice] = 'Your question has successfully been created!'
       redirect_to @question
     else
+      flash[:alert] = @question.errors.empty? ? "Error" : @question.errors.full_messages.to_sentence
       render :new
     end
   end

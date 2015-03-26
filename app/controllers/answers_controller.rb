@@ -13,6 +13,7 @@ class AnswersController < ApplicationController
     @answer = @question.answers.build(answer_params)
 
     if @answer.save
+      flash[:notice] = 'Your answer has successfully been added!'
       redirect_to @question # целесообразнее вернуться на страницу вопроса
     else
       render :new

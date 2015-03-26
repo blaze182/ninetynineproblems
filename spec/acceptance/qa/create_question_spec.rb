@@ -20,6 +20,30 @@ feature 'Create question', %q{
     expect(page).to have_content 'Your question has successfully been created!'
   end
 
+  scenario 'Authenticated user tries to create question with short title' do
+    sign_in user
+
+    visit questions_path
+    click_on 'Ask question'
+    fill_in 'Title', with: 'short'
+    fill_in 'Body', with: 'Test body is definitely longer than 30 symbols of text'
+    click_on 'Create'
+
+    expect(page).to have_content 'Title is too short'
+  end
+
+  scenario 'Authenticated user tries to create question with short body' do
+    sign_in user
+
+    visit questions_path
+    click_on 'Ask question'
+    fill_in 'Title', with: 'Test question longer than 15 symbols'
+    fill_in 'Body', with: 'short'
+    click_on 'Create'
+
+    expect(page).to have_content 'Body is too short'
+  end
+
   scenario 'Unauthenticated user tries to create a question' do
     visit questions_path
     click_on 'Ask question'
