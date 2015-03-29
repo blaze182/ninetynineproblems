@@ -105,8 +105,8 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'does not save answer attributes to database' do
         question.reload
-        expect(question.title).to eq "The title is minimum of 15 characters"
-        expect(question.body).to eq "MyText is definitely should be more than 30 characters"
+        expect(question.title).not_to eq 'Sample title longer than 15 characters'
+        expect(question.body).not_to eq nil
       end
 
       it { should render_template :edit }

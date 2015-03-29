@@ -37,7 +37,9 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    @question.destroy!
+    if @question.destroy!
+      flash[:notice] = 'Your question has been successfully deleted!'
+    end
     redirect_to questions_path
   end
 

@@ -1,4 +1,6 @@
-p = @question.title
-p = @question.body
+.question
+  p = @question.title
+  p = @question.body
+  p = link_to 'Delete', @question, method: :delete if @question.user == current_user
 = render @question.answers
 = render "answers/form", question: @question, answer: @answer if user_signed_in?

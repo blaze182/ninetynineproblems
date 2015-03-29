@@ -1,7 +1,12 @@
 FactoryGirl.define do
+  sequence :title do |n|
+    "The title is minimum of 15 characters No.#{n}"
+  end
+
   factory :question do
-    title "The title is minimum of 15 characters"
+    title
     body "MyText is definitely should be more than 30 characters"
+    user
 
     factory :question_with_answers do
       transient do
@@ -18,6 +23,7 @@ FactoryGirl.define do
   factory :invalid_question, class: 'Question' do
     title "Invalid title"
     body nil
+    user
   end
 
 end
