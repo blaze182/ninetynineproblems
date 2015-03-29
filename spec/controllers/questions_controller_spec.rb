@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let (:question) { create :question }
+  let(:user) { create :user }
+  let(:question) { create :question, user: user }
+  let(:other_user) { create :user }
+  let(:foreign_question) { create :question, user: other_user }
 
   describe 'GET #index' do
     let (:questions) { create_list :question, 2 }
@@ -20,6 +23,10 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'assigns the requested question to @question' do
       expect(assigns :question).to eq question
+    end
+
+    it 'assigns a new answer to @answer' do
+      expect(assigns :answer).to be_a_new(Answer)
     end
 
     it { should render_template :show }
@@ -50,11 +57,11 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
-    sign_in_user
-
     context 'with valid parameters' do
+      sign_in_user
+
       it 'saves the new question to database' do
-        expect { post :create, question: attributes_for(:question) }.to change(Question, :count).by(1)
+        expect { post :create, question: attributes_for(:question) }.to change(@user.questions, :count).by(1)
       end
 
       it do
@@ -64,6 +71,8 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with invalid parameters' do
+      sign_in_user
+
       it 'does not save the new question to database' do
         expect { post :create, question: attributes_for(:invalid_question) }.to_not change(Question, :count)
       end
@@ -73,12 +82,19 @@ RSpec.describe QuestionsController, type: :controller do
         should render_template :new
       end
     end
+
+    context 'user signed out' do
+      it do
+        post :create, question: attributes_for(:question)
+        should redirect_to new_user_session_path
+      end
+    end
   end
 
   describe 'PATCH #update' do
-    sign_in_user
-
     context 'with valid parameters' do
+      sign_in_user
+
       it 'assigns the requested question to @question' do
         patch :update, id: question, question: attributes_for(:question)
         expect(assigns :question).to eq question
@@ -94,6 +110,16 @@ RSpec.describe QuestionsController, type: :controller do
         expect(question.body).to eq new_body
       end
 
+      it 'does not alter a foreign question' do
+        new_title = 'Some new title, longer than 15 chars'
+        new_body = 'This body actually should be longer than 30 characters'
+
+        patch :update, id: foreign_question, question: { title: new_title, body: new_body }
+        foreign_question.reload
+        expect(foreign_question.title).not_to eq new_title
+        expect(foreign_question.body).not_to eq new_body
+      end
+
       it do
         patch :update, id: question, question: attributes_for(:question)
         should redirect_to question
@@ -101,6 +127,8 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with invalid parameters' do
+      sign_in_user
+
       before { patch :update, id: question, question: {title: 'Sample title longer than 15 characters', body: nil} }
 
       it 'does not save answer attributes to database' do
@@ -112,20 +140,45 @@ RSpec.describe QuestionsController, type: :controller do
       it { should render_template :edit }
     end
 
+    context 'user signed out' do
+      it do
+        patch :update, id: question, question: attributes_for(:question)
+        should redirect_to new_user_session_path
+      end
+    end
+
   end
 
   describe 'DELETE #destroy' do
-    sign_in_user
 
-    before { question }
+    context 'user signed in' do
+      sign_in_user
 
-    it 'deletes question' do
-      expect {delete :destroy, id: question}.to change(Question, :count).by(-1)
+      before { question }
+
+      it 'deletes question' do
+        expect {delete :destroy, id: question}.to change(Question, :count).by(-1)
+      end
+
+      it 'does not delete a foreign question' do
+        foreign_question
+        expect {delete :destroy, id: foreign_question}.not_to change(Question, :count)
+      end
+
+      it do
+        delete :destroy, id: question
+        should redirect_to questions_path
+      end
     end
 
-    it do
-      delete :destroy, id: question
-      should redirect_to questions_path
+    context 'user signed out' do
+      before { question }
+
+      it do
+        delete :destroy, id: question
+        should redirect_to new_user_session_path
+      end
     end
+
   end
 end

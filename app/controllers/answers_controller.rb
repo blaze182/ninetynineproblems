@@ -19,18 +19,27 @@ class AnswersController < ApplicationController
   end
   
   def update
-    if @answer.update answer_params
-      flash[:notice] = 'Your changes have been successfully saved!'
-      redirect_to @question
+    if @answer.user == current_user
+      if @answer.update answer_params
+        flash[:notice] = 'Your changes have been successfully saved!'
+        redirect_to @question
+      else
+        flash[:alert] = @answer.errors.empty? ? "Error" : @answer.errors.full_messages.to_sentence
+        render :edit
+      end
     else
-      flash[:alert] = @answer.errors.empty? ? "Error" : @answer.errors.full_messages.to_sentence
-      render :edit
+      flash[:alert] = 'Access denied'
+      redirect_to @question
     end
   end
 
   def destroy
-    if @answer.destroy!
-      flash[:notice] = 'Your answer has been successfully deleted!'
+    if @answer.user == current_user
+      if @answer.destroy!
+        flash[:notice] = 'Your answer has been successfully deleted!'
+      end
+    else
+      flash[:alert] = 'Access denied'
     end
     redirect_to @question
   end

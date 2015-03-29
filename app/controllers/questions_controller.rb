@@ -13,12 +13,17 @@ class QuestionsController < ApplicationController
   # end
 
   def update
-    if @question.update question_params
-      flash[:notice] = 'Your changes have been successfully saved!'
-      redirect_to @question
+    if @question.user == current_user
+      if @question.update question_params
+        flash[:notice] = 'Your changes have been successfully saved!'
+        redirect_to @question
+      else
+        flash[:alert] = @question.errors.empty? ? "Error" : @question.errors.full_messages.to_sentence
+        render :edit
+      end
     else
-      flash[:alert] = @question.errors.empty? ? "Error" : @question.errors.full_messages.to_sentence
-      render :edit
+      flash[:alert] = 'Access denied'
+      redirect_to @question
     end
   end
 
@@ -40,8 +45,12 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if @question.destroy!
-      flash[:notice] = 'Your question has been successfully deleted!'
+    if @question.user == current_user
+      if @question.destroy!
+        flash[:notice] = 'Your question has been successfully deleted!'
+      end
+    else
+      flash[:alert] = 'Access denied'
     end
     redirect_to questions_path
   end
