@@ -1,10 +1,7 @@
 class AnswersController < ApplicationController
   before_action :load_question, only: [:new, :create, :update, :destroy]
   before_action :load_answer, only: [:edit, :update, :destroy]
-
-  # def new
-  #   @answer = Answer.new
-  # end
+  before_action :authenticate_user!
 
   # def edit
   # end
