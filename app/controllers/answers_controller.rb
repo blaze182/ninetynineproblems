@@ -2,28 +2,31 @@ class AnswersController < ApplicationController
   before_action :load_question, only: [:new, :create, :update, :destroy]
   before_action :load_answer, only: [:edit, :update, :destroy]
 
-  def new
-    @answer = Answer.new
-  end
+  # def new
+  #   @answer = Answer.new
+  # end
 
   # def edit
   # end
 
   def create
     @answer = @question.answers.build(answer_params)
+    @answer.user = current_user
 
     if @answer.save
       flash[:notice] = 'Your answer has successfully been added!'
-      redirect_to @question # целесообразнее вернуться на страницу вопроса
     else
-      render :new
+      flash[:alert] = @answer.errors.empty? ? "Error" : @answer.errors.full_messages.to_sentence
     end
+    redirect_to @question # целесообразнее вернуться на страницу вопроса
   end
-
+  
   def update
     if @answer.update answer_params
+      flash[:notice] = 'Your changes have been successfully saved!'
       redirect_to @question
     else
+      flash[:alert] = @answer.errors.empty? ? "Error" : @answer.errors.full_messages.to_sentence
       render :edit
     end
   end

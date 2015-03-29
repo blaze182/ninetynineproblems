@@ -1,2 +1,4 @@
-h1 Answers#edit
-p Find me in app/views/answers/edit.html.slim
+= form_for [@answer.question, @answer] do |f|
+  = f.label :body, 'Your answer'
+  = f.text_area :body
+  = f.submit 'Save answer'

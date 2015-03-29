@@ -4,20 +4,6 @@ RSpec.describe AnswersController, type: :controller do
   let (:question_with_answers) { create :question_with_answers }
   let (:question) { create :question }
 
-  describe 'GET #new' do
-    before { get :new, question_id: question_with_answers }
-
-    it 'assigns question to @question' do
-      expect(assigns :question).to eq question_with_answers
-    end
-
-    it 'assigns a new answer to @answer' do
-      expect(assigns :answer).to be_a_new(Answer)
-    end
-
-    it { should render_template :new }
-  end
-
   describe 'GET #edit' do
     before { get :edit, question_id: question_with_answers, id: question_with_answers.answers[0] }
 
@@ -49,7 +35,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it do
         post :create, question_id: question, answer: attributes_for(:invalid_answer)
-        should render_template :new
+        should redirect_to assigns :question
       end
     end
   end

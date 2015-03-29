@@ -14,8 +14,10 @@ class QuestionsController < ApplicationController
 
   def update
     if @question.update question_params
+      flash[:notice] = 'Your changes have been successfully saved!'
       redirect_to @question
     else
+      flash[:alert] = @question.errors.empty? ? "Error" : @question.errors.full_messages.to_sentence
       render :edit
     end
   end
@@ -26,6 +28,7 @@ class QuestionsController < ApplicationController
 
   def create
     @question = Question.new(question_params)
+    @question.user = current_user
 
     if @question.save
       flash[:notice] = 'Your question has successfully been created!'

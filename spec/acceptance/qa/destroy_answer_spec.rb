@@ -16,7 +16,6 @@ feature 'Destroy answer', %q{
     before {sign_in user}
     scenario 'Tries to destroy his answer' do
       visit question_path(question)
-      save_and_open_page
       find("#answer_#{answer.id}").click_on 'Delete'
       expect(page).to have_content 'Your answer has been successfully deleted!'
       expect(page).not_to have_content answer.body

@@ -21,11 +21,16 @@ feature 'Create answer', %q{
       expect(page).to have_content answer.body
     end
 
-    scenario 'Can see list of answers' do
-      answers = create_list(:answer, 5, question: question)
+    scenario 'Tries to create answer with short body and no luck' do
       visit question_path(question)
-      answers.each{|answer| expect(page).to have_content answer.body}
+      fill_in 'Your answer', with: 'shrtbdy'
+      click_on 'Post your answer'
+
+      expect(page).to have_content 'Body is too short'
+      visit question_path(question)
+      expect(page).not_to have_content 'shrtbdy'
     end
+
   end
 
   describe 'Unauthenticated user' do
