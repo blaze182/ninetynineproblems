@@ -1,4 +1,5 @@
 .answer id=dom_id(answer)
   p = answer.body
-  p = link_to 'Edit', edit_question_answer_path(answer.question, answer) if answer.user == current_user
-  p = link_to 'Delete', question_answer_path(answer.question, answer), method: :delete if answer.user == current_user
+  - if answer.user_id == current_user.try(:id)
+    p = link_to 'Edit', edit_question_answer_path(answer.question, answer) 
+    p = link_to 'Delete', question_answer_path(answer.question, answer), method: :delete

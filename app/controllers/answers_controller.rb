@@ -19,7 +19,7 @@ class AnswersController < ApplicationController
   end
   
   def update
-    if @answer.user == current_user
+    if @answer.user_id == current_user.try(:id)
       if @answer.update answer_params
         flash[:notice] = 'Your changes have been successfully saved!'
         redirect_to @question
@@ -34,7 +34,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if @answer.user == current_user
+    if @answer.user_id == current_user.try(:id)
       if @answer.destroy!
         flash[:notice] = 'Your answer has been successfully deleted!'
       end
