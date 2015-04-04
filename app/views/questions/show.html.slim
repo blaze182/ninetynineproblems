@@ -4,5 +4,6 @@
   - if @question.user_id == current_user.try(:id)
     p = link_to 'Edit', edit_question_path(@question)
     p = link_to 'Delete', @question, method: :delete
-= render @question.answers
+div id='answers'
+  = render @question.answers
 = render "answers/form", question: @question, answer: @answer if user_signed_in?

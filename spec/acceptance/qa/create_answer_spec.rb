@@ -13,7 +13,7 @@ feature 'Create answer', %q{
   describe 'Authenticated user' do
     before {sign_in user}
     
-    scenario 'Creates answer' do
+    scenario 'Creates answer', js: true do
       visit question_path(question)
       fill_in 'Your answer', with: answer.body
       click_on 'Post your answer'
@@ -21,7 +21,7 @@ feature 'Create answer', %q{
       expect(page).to have_content answer.body
     end
 
-    scenario 'Tries to create answer with short body and no luck' do
+    scenario 'Tries to create answer with short body and no luck', js: true do
       visit question_path(question)
       fill_in 'Your answer', with: 'shrtbdy'
       click_on 'Post your answer'

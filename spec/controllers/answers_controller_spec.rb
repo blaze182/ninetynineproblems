@@ -25,18 +25,18 @@ RSpec.describe AnswersController, type: :controller do
       sign_in_user
 
       it 'saves the new answer assigned to question to database' do
-        expect { post :create, question_id: question, answer: attributes_for(:answer) }
+        expect { post :create, question_id: question, answer: attributes_for(:answer), format: :js }
                                                       .to change(question.answers, :count).by(1)
       end
 
       it 'saves the new answer assigned to user to database' do
-        expect { post :create, question_id: question, answer: attributes_for(:answer) }
+        expect { post :create, question_id: question, answer: attributes_for(:answer), format: :js }
                                                       .to change(@user.answers, :count).by(1)
       end
 
       it do
-        post :create, question_id: question, answer: attributes_for(:answer)
-        should redirect_to assigns :question
+        post :create, question_id: question, answer: attributes_for(:answer), format: :js
+        should render_template :create
       end
     end
 
@@ -44,13 +44,13 @@ RSpec.describe AnswersController, type: :controller do
       sign_in_user
 
       it 'does not save the new answer to database' do
-        expect { post :create, question_id: question, answer: attributes_for(:invalid_answer) }
+        expect { post :create, question_id: question, answer: attributes_for(:invalid_answer), format: :js }
                                                       .to_not change(question.answers, :count)
       end
 
       it do
-        post :create, question_id: question, answer: attributes_for(:invalid_answer)
-        should redirect_to assigns :question
+        post :create, question_id: question, answer: attributes_for(:invalid_answer), format: :js
+        should render_template :create
       end
     end
 

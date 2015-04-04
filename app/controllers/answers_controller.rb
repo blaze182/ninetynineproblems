@@ -15,7 +15,7 @@ class AnswersController < ApplicationController
     else
       flash[:alert] = @answer.errors.empty? ? "Error" : @answer.errors.full_messages.to_sentence
     end
-    redirect_to @question # целесообразнее вернуться на страницу вопроса
+    # redirect_to @question # целесообразнее вернуться на страницу вопроса
   end
   
   def update
