@@ -1,8 +1,6 @@
-$('.notice').html('')
-$('.alert').html('')
-<% unless flash[:alert] %>
-$('#answers').append('<%= j render "answers/answer", answer: @answer, id: @answer.id %>')
-$('.notice').html('<%= flash[:notice] %>')
+<% if @answer.errors.present? %>
+$('.answer-errors').html('<%= j @answer.errors.full_messages.to_sentence %>')
 <% else %>
-$('.alert').html('<%= flash[:alert] %>')
+$('#answers').append('<%= j render "answers/answer", answer: @answer, id: @answer.id %>')
+$('.notice').html('<%= j flash[:notice] %>')
 <% end %>

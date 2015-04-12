@@ -11,10 +11,12 @@ feature 'Create answer', %q{
   given(:answer) {build :answer}
 
   describe 'Authenticated user' do
-    before {sign_in user}
+    before do
+      sign_in user
+      visit question_path(question)
+    end
     
     scenario 'Creates answer', js: true do
-      visit question_path(question)
       fill_in 'Your answer', with: answer.body
       click_on 'Post your answer'
       expect(page).to have_content 'Your answer has successfully been added!'
@@ -22,7 +24,6 @@ feature 'Create answer', %q{
     end
 
     scenario 'Tries to create answer with short body and no luck', js: true do
-      visit question_path(question)
       fill_in 'Your answer', with: 'shrtbdy'
       click_on 'Post your answer'
 
