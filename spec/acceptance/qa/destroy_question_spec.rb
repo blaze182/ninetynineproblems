@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../acceptance_helper'
 
 feature 'Destroy question', %q{
   In order to get rid of question for some reason

@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../acceptance_helper'
 
 feature 'Lookup question list', %q{
   In order to find interesting answers to interesting questions

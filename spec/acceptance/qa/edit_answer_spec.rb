@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../acceptance_helper'
 
 feature 'Edit answer body', %q{
   In order to correct mistakes in my answer, make it more accurate or relevant
