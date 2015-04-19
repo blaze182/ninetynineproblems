@@ -1,5 +1,7 @@
-= form_for [question, answer], remote: true do |f|
-  = f.label :body, 'Your answer'
-  .answer-errors
-  = f.text_area :body
-  = f.submit 'Post your answer'
+= form_for [question, answer], remote: true, html: {class: 'col-sm-7'} do |f|
+  .form-group
+    = f.label :body, 'Your answer', class: 'control-label'
+    .answer-errors.text-danger
+    = f.text_area :body, class: 'form-control', rows: 3
+  .form-group
+    = f.submit 'Post your answer', class: 'btn btn-primary'

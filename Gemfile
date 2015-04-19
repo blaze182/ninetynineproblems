@@ -18,6 +18,7 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'slim-rails'
 # Bootstrap for sass
 gem 'bootstrap-sass', '~> 3.3.4'
+gem 'font-awesome-sass'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'

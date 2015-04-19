@@ -1,5 +1,11 @@
 .answer id=dom_id(answer)
-  p = answer.body
-  - if answer.user_id == current_user.try(:id)
-    p = link_to 'Edit', edit_question_answer_path(answer.question, answer) 
-    p = link_to 'Delete', question_answer_path(answer.question, answer), method: :delete, remote: true
+  .row
+    .col-sm-7
+      p = answer.body
+    .col-sm-3
+      - if answer.user_id == current_user.try(:id)
+        .btn-group.btn-group-xs
+          = link_to icon('edit')+' Edit', edit_question_answer_path(answer.question, answer), class: 'btn btn-default'
+          = link_to icon('trash')+' Delete', question_answer_path(answer.question, answer), method: :delete, class: 'btn btn-default', remote: true
+  .row
+    hr.col-sm-9

@@ -1,2 +1,14 @@
-p= link_to 'Ask question', new_question_path
-= render @questions
+.jumbotron
+  h2.marker-text I got 99 Problems, but that b*tch ain't one
+  p
+    | This is the #{icon('diamond', class: 'ruby')} 
+    span.ruby Ruby on Rails
+    |  education project. If you got 99 problems, you can simply turn it into 98 problems by pressing an 
+    mark Ask question
+    |  button below.
+  ul.list-inline
+    li = link_to icon('bullhorn')+' Ask question', new_question_path, class: 'btn btn-primary btn-lg'
+    li = link_to icon('thumbs-up')+' Sign up', new_user_registration_path, class: 'btn btn-default btn-lg' unless user_signed_in?
+- if @questions
+  ul.list-unstyled
+    = render @questions

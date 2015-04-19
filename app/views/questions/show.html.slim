@@ -1,5 +1,5 @@
-.question
-  p = @question.title
+.question.jumbotron
+  h3 = @question.title
   p = @question.body
   - if @question.user_id == current_user.try(:id)
     p = link_to 'Edit', edit_question_path(@question)
