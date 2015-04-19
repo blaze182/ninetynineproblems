@@ -13,7 +13,7 @@ feature 'Create question', %q{
     before do
       sign_in user
       visit questions_path
-      click_on 'Ask question'
+      find('nav').click_on 'Ask question'
     end
 
     scenario 'Creates question' do
@@ -49,7 +49,7 @@ feature 'Create question', %q{
   describe 'Unauthenticated user' do
     scenario 'Tries to create a question with no luck' do
       visit questions_path
-      click_on 'Ask question'
+      find('nav').click_on 'Ask question'
 
       expect(page).to have_content 'You need to sign in or sign up before continuing.'
     end
