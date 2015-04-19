@@ -2,22 +2,18 @@ class AnswersController < ApplicationController
   before_action :load_question, only: [:new, :create, :update, :destroy]
   before_action :load_answer, only: [:edit, :update, :destroy]
   before_action :authenticate_user!
+  after_action  :discard_flash_messages, only: [:create, :destroy]
 
   # def edit
   # end
 
-  def create
+  def create # js enabled
     @answer = @question.answers.build(answer_params)
     @answer.user = current_user
 
-    if @answer.save
-      flash[:notice] = 'Your answer has successfully been added!'
-    else
-      flash[:alert] = @answer.errors.empty? ? "Error" : @answer.errors.full_messages.to_sentence
-    end
-    # redirect_to @question # целесообразнее вернуться на страницу вопроса
+    flash[:notice] = 'Your answer has successfully been added!' if @answer.save
   end
-  
+
   def update
     if @answer.user_id == current_user.try(:id)
       if @answer.update answer_params
@@ -33,15 +29,13 @@ class AnswersController < ApplicationController
     end
   end
 
-  def destroy
+  def destroy # js enabled
     if @answer.user_id == current_user.try(:id)
-      if @answer.destroy!
-        flash[:notice] = 'Your answer has been successfully deleted!'
-      end
+      @answer.destroy!
     else
       flash[:alert] = 'Access denied'
     end
-    redirect_to @question
+    # redirect_to @question
   end
 
   private
@@ -56,5 +50,9 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body)
+  end
+
+  def discard_flash_messages
+    flash.discard if request.xhr?
   end
 end

@@ -1,8 +1,8 @@
 require_relative '../acceptance_helper'
 
-feature 'Edit answer body', %q{
+feature 'Answer editing', %q{
   In order to correct mistakes in my answer, make it more accurate or relevant
-  As an authenticated user
+  As an answer author
   I want to be able to edit my answer
 } do
   given(:user)            {create :user}
@@ -12,20 +12,23 @@ feature 'Edit answer body', %q{
   given!(:foreign_answer) {create :answer, question: question, user: other_user}
 
   describe 'Authenticated user' do
-    before {sign_in user}
+    before do
+      sign_in user
+      visit question_path(question)
+    end
 
     scenario 'Alters his answer' do
-      visit question_path(question)
       find("#answer_#{answer.id}").click_on 'Edit'
       fill_in 'Your answer', with: 'New answer containing more than 30 symbols'
       click_on 'Save answer'
 
       expect(page).to have_content 'Your changes have been successfully saved!'
       expect(page).to have_content 'New answer containing more than 30 symbols'
+      expect(page).not_to have_content answer.body
+      expect(find("#answers")).not_to have_selector 'textarea'
     end
 
     scenario 'Tries to edit answer with short body and no luck' do
-      visit question_path(question)
       find("#answer_#{answer.id}").click_on 'Edit'
       fill_in 'Your answer', with: 'shrtbdy'
       click_on 'Save answer'
@@ -36,7 +39,6 @@ feature 'Edit answer body', %q{
     end
 
     scenario 'Tries to edit someone else\'s answer with no luck' do
-      visit question_path(question)
       expect(find("#answer_#{foreign_answer.id}")).not_to have_content 'Edit'
     end
 

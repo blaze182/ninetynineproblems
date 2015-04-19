@@ -71,6 +71,11 @@ RSpec.describe AnswersController, type: :controller do
         expect(assigns :answer).to eq answer
       end
 
+      it 'assigns question to @question' do
+        patch :update, question_id: question, id: answer, answer: attributes_for(:answer)
+        expect(assigns :question).to eq question
+      end
+
       it 'alters answer attributes' do
         new_body = 'This body actually should be longer than 30 characters'
 
@@ -124,17 +129,17 @@ RSpec.describe AnswersController, type: :controller do
       before { answer }
 
       it 'deletes answer' do
-        expect {delete :destroy, question_id: question, id: answer}.to change(Answer, :count).by(-1)
+        expect {delete :destroy, question_id: question, id: answer, format: :js}.to change(Answer, :count).by(-1)
       end
 
       it 'does not delete foreign answer' do
         foreign_answer
-        expect {delete :destroy, question_id: question, id: foreign_answer}.not_to change(Answer, :count)
+        expect {delete :destroy, question_id: question, id: foreign_answer, format: :js}.not_to change(Answer, :count)
       end
 
       it do
-        delete :destroy, question_id: question, id: answer
-        should redirect_to assigns :question
+        delete :destroy, question_id: question, id: answer, format: :js
+        should render_template :destroy
       end
     end
 

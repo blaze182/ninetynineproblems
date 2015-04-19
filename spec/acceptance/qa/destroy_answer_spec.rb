@@ -12,7 +12,7 @@ feature 'Destroy answer', %q{
   given!(:answer)         {create :answer, question: question, user: user}
   given!(:foreign_answer) {create :answer, question: question, user: other_user}
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     before {sign_in user}
     scenario 'Tries to destroy his answer' do
       visit question_path(question)
