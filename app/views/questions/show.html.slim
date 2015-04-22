@@ -1,9 +1,24 @@
 .question.jumbotron
-  h3 = @question.title
-  p = @question.body
+  .question-content
+    h3 = @question.title
+    p.question-body = @question.body
   - if @question.user_id == current_user.try(:id)
-    p = link_to 'Edit', edit_question_path(@question)
-    p = link_to 'Delete', @question, method: :delete
+    .question-edit-form
+      = form_for @question, remote: true do |f|
+        .question-errors.text-danger
+        .form-group
+          = f.label :title, class: 'control-label'
+          = f.text_field :title, class: 'form-control'
+        .form-group
+          = f.label :body, class: 'control-label'
+          = f.text_area :body, class: 'form-control', rows: 10
+        .form-group
+          = f.submit 'Save question', class: 'btn btn-primary'
+  - if @question.user_id == current_user.try(:id)
+      .btn-group.btn-group-sm.pull-right
+        = link_to icon('edit')+' Edit', edit_question_path(@question), class: 'question-edit-button btn btn-warning'
+        = link_to icon('trash')+' Delete', @question, method: :delete, class: 'btn btn-danger'
+      .row
 div id='answers'
   = render @question.answers
 = render "answers/form", question: @question, answer: @answer if user_signed_in?

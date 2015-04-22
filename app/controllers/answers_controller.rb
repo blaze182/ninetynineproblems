@@ -18,10 +18,6 @@ class AnswersController < ApplicationController
     if @answer.user_id == current_user.try(:id)
       if @answer.update answer_params
         flash[:notice] = 'Your changes have been successfully saved!'
-        # redirect_to @question
-      else
-        flash[:alert] = @answer.errors.empty? ? "Error" : @answer.errors.full_messages.to_sentence
-        # render :edit
       end
     else
       flash[:alert] = 'Access denied'
@@ -34,7 +30,6 @@ class AnswersController < ApplicationController
     else
       flash[:alert] = 'Access denied'
     end
-    # redirect_to @question
   end
 
   private
@@ -49,9 +44,5 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body)
-  end
-
-  def discard_flash_messages
-    flash.discard if request.xhr?
   end
 end

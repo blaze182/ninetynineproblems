@@ -96,7 +96,7 @@ RSpec.describe QuestionsController, type: :controller do
       sign_in_user
 
       it 'assigns the requested question to @question' do
-        patch :update, id: question, question: attributes_for(:question)
+        patch :update, id: question, question: attributes_for(:question), format: :js
         expect(assigns :question).to eq question
       end
 
@@ -104,7 +104,7 @@ RSpec.describe QuestionsController, type: :controller do
         new_title = 'Some new title, longer than 15 chars'
         new_body = 'This body actually should be longer than 30 characters'
 
-        patch :update, id: question, question: { title: new_title, body: new_body }
+        patch :update, id: question, question: { title: new_title, body: new_body }, format: :js
         question.reload
         expect(question.title).to eq new_title
         expect(question.body).to eq new_body
@@ -114,22 +114,22 @@ RSpec.describe QuestionsController, type: :controller do
         new_title = 'Some new title, longer than 15 chars'
         new_body = 'This body actually should be longer than 30 characters'
 
-        patch :update, id: foreign_question, question: { title: new_title, body: new_body }
+        patch :update, id: foreign_question, question: { title: new_title, body: new_body }, format: :js
         foreign_question.reload
         expect(foreign_question.title).not_to eq new_title
         expect(foreign_question.body).not_to eq new_body
       end
 
       it do
-        patch :update, id: question, question: attributes_for(:question)
-        should redirect_to question
+        patch :update, id: question, question: attributes_for(:question), format: :js
+        should render_template :update
       end
     end
 
     context 'with invalid parameters' do
       sign_in_user
 
-      before { patch :update, id: question, question: {title: 'Sample title longer than 15 characters', body: nil} }
+      before { patch :update, id: question, question: {title: 'Sample title longer than 15 characters', body: nil}, format: :js }
 
       it 'does not save answer attributes to database' do
         question.reload
@@ -137,7 +137,7 @@ RSpec.describe QuestionsController, type: :controller do
         expect(question.body).not_to eq nil
       end
 
-      it { should render_template :edit }
+      it { should render_template :update }
     end
 
     context 'user signed out' do

@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
   before_action :load_question, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
+  after_action  :discard_flash_messages, only: [:update]
 
   def index
     @questions = Question.all
@@ -9,21 +10,17 @@ class QuestionsController < ApplicationController
   def show
     @answer = Answer.new
   end
+
   # def edit
   # end
 
-  def update
+  def update # js enabled
     if @question.user_id == current_user.try(:id)
       if @question.update question_params
         flash[:notice] = 'Your changes have been successfully saved!'
-        redirect_to @question
-      else
-        flash[:alert] = @question.errors.empty? ? "Error" : @question.errors.full_messages.to_sentence
-        render :edit
       end
     else
       flash[:alert] = 'Access denied'
-      redirect_to @question
     end
   end
 

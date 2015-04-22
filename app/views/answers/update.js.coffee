@@ -11,5 +11,4 @@ $("#<%=dom_id(@answer)%> .answer-edit-form").removeClass('fadeInUp').addClass('f
           $("#<%=dom_id(@answer)%> .answer-body").removeClass('hidden fadeOutUp').addClass('show animated fadeInUp')
           $("#<%=dom_id(@answer)%> .answer-edit-button").removeClass('disabled')
         )
-
 <% end %>

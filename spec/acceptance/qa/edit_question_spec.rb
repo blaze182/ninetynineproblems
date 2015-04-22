@@ -14,7 +14,7 @@ feature 'Edit question body and text', %q{
   describe 'Authenticated user' do
     before {sign_in user}
 
-    scenario 'Alters his question' do
+    scenario 'Alters his question', js: true do
       visit question_path(question)
       find('.question').click_on 'Edit'
 
@@ -27,7 +27,7 @@ feature 'Edit question body and text', %q{
       expect(page).to have_content 'New body for question longer than 30 symbols'
     end
 
-    scenario 'Tries to edit question with short title and no luck' do
+    scenario 'Tries to edit question with short title and no luck', js: true do
       visit question_path(question)
       find('.question').click_on 'Edit'
 
@@ -40,7 +40,7 @@ feature 'Edit question body and text', %q{
       expect(page).not_to have_content 'shortttl'
     end
 
-    scenario 'Tries to edit question with short body and no luck' do
+    scenario 'Tries to edit question with short body and no luck', js: true do
       visit question_path(question)
       find('.question').click_on 'Edit'
 
