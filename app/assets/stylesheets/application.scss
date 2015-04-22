@@ -16,6 +16,9 @@
 @import "bootstrap";
 @import "font-awesome-sprockets";
 @import "font-awesome";
+@import 'animate';
+@import 'animate/fadeInUp';
+@import 'animate/fadeOutUp';
 
 .marker-text {
   font-family: 'Permanent Marker', cursive;

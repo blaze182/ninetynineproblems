@@ -2,7 +2,7 @@ class AnswersController < ApplicationController
   before_action :load_question, only: [:new, :create, :update, :destroy]
   before_action :load_answer, only: [:edit, :update, :destroy]
   before_action :authenticate_user!
-  after_action  :discard_flash_messages, only: [:create, :destroy]
+  after_action  :discard_flash_messages, only: [:create, :destroy, :update]
 
   # def edit
   # end
@@ -14,18 +14,17 @@ class AnswersController < ApplicationController
     flash[:notice] = 'Your answer has successfully been added!' if @answer.save
   end
 
-  def update
+  def update # js enabled
     if @answer.user_id == current_user.try(:id)
       if @answer.update answer_params
         flash[:notice] = 'Your changes have been successfully saved!'
-        redirect_to @question
+        # redirect_to @question
       else
         flash[:alert] = @answer.errors.empty? ? "Error" : @answer.errors.full_messages.to_sentence
-        render :edit
+        # render :edit
       end
     else
       flash[:alert] = 'Access denied'
-      redirect_to @question
     end
   end
 

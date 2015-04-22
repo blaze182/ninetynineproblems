@@ -67,19 +67,19 @@ RSpec.describe AnswersController, type: :controller do
       sign_in_user
 
       it 'assigns answer to @answer' do
-        patch :update, question_id: question, id: answer, answer: attributes_for(:answer)
+        patch :update, question_id: question, id: answer, answer: attributes_for(:answer), format: :js
         expect(assigns :answer).to eq answer
       end
 
       it 'assigns question to @question' do
-        patch :update, question_id: question, id: answer, answer: attributes_for(:answer)
+        patch :update, question_id: question, id: answer, answer: attributes_for(:answer), format: :js
         expect(assigns :question).to eq question
       end
 
       it 'alters answer attributes' do
         new_body = 'This body actually should be longer than 30 characters'
 
-        patch :update, question_id: question, id: answer, answer: {body: new_body}
+        patch :update, question_id: question, id: answer, answer: {body: new_body}, format: :js
         answer.reload
         expect(answer.body).to eq new_body
       end
@@ -87,14 +87,14 @@ RSpec.describe AnswersController, type: :controller do
       it 'does not alter foreign answer' do
         new_body = 'This body actually should be longer than 30 characters'
 
-        patch :update, question_id: question, id: foreign_answer, answer: {body: new_body}
+        patch :update, question_id: question, id: foreign_answer, answer: {body: new_body}, format: :js
         foreign_answer.reload
         expect(foreign_answer.body).not_to eq new_body
       end
 
       it do
-        patch :update, question_id: question, id: answer, answer: attributes_for(:answer)
-        should redirect_to question
+        patch :update, question_id: question, id: answer, answer: attributes_for(:answer), format: :js
+        should render_template :update
       end
     end
 
@@ -102,7 +102,7 @@ RSpec.describe AnswersController, type: :controller do
       sign_in_user
 
       before do
-        patch :update, question_id: question, id: answer, answer: {body: 'short'}
+        patch :update, question_id: question, id: answer, answer: {body: 'short'}, format: :js
       end
 
       it 'does not save answer attributes to database' do
@@ -110,7 +110,7 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.body).not_to eq 'short'
       end
 
-      it { should render_template :edit }
+      it { should render_template :update }
     end
 
     context 'user signed out' do

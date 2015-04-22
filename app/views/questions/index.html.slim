@@ -7,8 +7,8 @@
     mark Ask question
     |  button below.
   ul.list-inline
-    li = link_to icon('bullhorn')+' Ask question', new_question_path, class: 'btn btn-primary btn-lg'
-    li = link_to icon('thumbs-up')+' Sign up', new_user_registration_path, class: 'btn btn-default btn-lg' unless user_signed_in?
+    li.animated.fadeInUp = link_to icon('bullhorn')+' Ask question', new_question_path, class: 'btn btn-primary btn-lg'
+    li.animated.fadeInUp = link_to icon('thumbs-up')+' Sign up', new_user_registration_path, class: 'btn btn-default btn-lg' unless user_signed_in?
 - if @questions
   ul.list-unstyled
     = render @questions

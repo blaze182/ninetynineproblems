@@ -1,11 +1,20 @@
 .answer id=dom_id(answer)
   .row
     .col-sm-7
-      p = answer.body
+      p.answer-body = answer.body
+      - if answer.user_id == current_user.try(:id)
+        .answer-edit-form
+          = form_for [answer.question, answer], remote: true do |f|
+            .form-group
+              = f.label :body, 'Edit your answer', class: 'control-label', for: dom_id(answer) + '_body'
+              .answer-errors.text-danger
+              = f.text_area :body, class: 'form-control', rows: 10, id: dom_id(answer) + '_body'
+            .form-group
+              = f.submit 'Save answer', class: 'btn btn-primary'
     .col-sm-3
       - if answer.user_id == current_user.try(:id)
         .btn-group.btn-group-xs
-          = link_to icon('edit')+' Edit', edit_question_answer_path(answer.question, answer), class: 'btn btn-default'
+          = link_to icon('edit')+' Edit', edit_question_answer_path(answer.question, answer), data: {answer_id: answer.id}, class: 'answer-edit-button btn btn-default'
           = link_to icon('trash')+' Delete', question_answer_path(answer.question, answer), method: :delete, class: 'btn btn-default', remote: true
   .row
     hr.col-sm-9

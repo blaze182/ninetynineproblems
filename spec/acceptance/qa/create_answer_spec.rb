@@ -17,14 +17,14 @@ feature 'Create answer', %q{
     end
     
     scenario 'Creates answer', js: true do
-      fill_in 'Your answer', with: answer.body
+      fill_in 'Add your answer', with: answer.body
       click_on 'Post your answer'
       expect(page).to have_content 'Your answer has successfully been added!'
       expect(page).to have_content answer.body
     end
 
     scenario 'Tries to create answer with short body and no luck', js: true do
-      fill_in 'Your answer', with: 'shrtbdy'
+      fill_in 'Add your answer', with: 'shrtbdy'
       click_on 'Post your answer'
 
       expect(page).to have_content 'Body is too short'

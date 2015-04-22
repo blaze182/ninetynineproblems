@@ -17,9 +17,9 @@ feature 'Answer editing', %q{
       visit question_path(question)
     end
 
-    scenario 'Alters his answer' do
+    scenario 'Alters his answer', js: true do
       find("#answer_#{answer.id}").click_on 'Edit'
-      fill_in 'Your answer', with: 'New answer containing more than 30 symbols'
+      fill_in 'Edit your answer', with: 'New answer containing more than 30 symbols'
       click_on 'Save answer'
 
       expect(page).to have_content 'Your changes have been successfully saved!'
@@ -28,9 +28,9 @@ feature 'Answer editing', %q{
       expect(find("#answers")).not_to have_selector 'textarea'
     end
 
-    scenario 'Tries to edit answer with short body and no luck' do
+    scenario 'Tries to edit answer with short body and no luck', js: true do
       find("#answer_#{answer.id}").click_on 'Edit'
-      fill_in 'Your answer', with: 'shrtbdy'
+      fill_in 'Edit your answer', with: 'shrtbdy'
       click_on 'Save answer'
 
       expect(page).to have_content 'Body is too short'
