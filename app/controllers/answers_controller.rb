@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
-  before_action :load_question, only: [:new, :create, :update, :destroy]
-  before_action :load_answer, only: [:edit, :update, :destroy]
+  before_action :load_question, only: [:new, :create, :update, :destroy, :mark_best]
+  before_action :load_answer, only: [:edit, :update, :destroy, :mark_best]
   before_action :authenticate_user!
   after_action  :discard_flash_messages, only: [:create, :destroy, :update]
 
@@ -22,6 +22,10 @@ class AnswersController < ApplicationController
     else
       flash[:alert] = 'Access denied'
     end
+  end
+
+  def mark_best # js enabled
+    @answer.mark_best if @question.user_id == current_user.try(:id)
   end
 
   def destroy # js enabled

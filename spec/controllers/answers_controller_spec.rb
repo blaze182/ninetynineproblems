@@ -122,6 +122,49 @@ RSpec.describe AnswersController, type: :controller do
 
   end
 
+  describe 'PATCH #mark_best' do
+    context 'user is signed in and owns question' do
+      sign_in_user
+
+      before { patch :mark_best, question_id: question, id: answer, format: :js }
+
+      it 'assigns answer to @answer' do
+        expect(assigns :answer).to eq answer
+      end
+
+      it 'assigns question to @question' do
+        expect(assigns :question).to eq question
+      end
+
+      it 'marks answer as the best' do
+        answer.reload
+        expect(answer).to be_best
+      end
+
+      it { should render_template :mark_best }
+    end
+
+    context 'user signed in and does not own a question' do
+      let(:foreign_question) { create :question, user: other_user}
+      let(:more_answers) { create_list :answer, 5, question: foreign_question }
+
+      sign_in_user
+
+      it 'does not mark foreign answer as the best' do
+        patch :mark_best, question_id: foreign_question, id: more_answers[3], format: :js
+        more_answers[3].reload
+        expect(more_answers[3]).not_to be_best
+      end
+    end
+
+    context 'user signed out' do
+      it do
+        patch :mark_best, question_id: question, id: answer, format: :js
+        should respond_with 401
+      end
+    end
+  end
+
   describe 'DELETE #destroy' do
     context 'user signed in' do
       sign_in_user
