@@ -4,9 +4,11 @@ class Answer < ActiveRecord::Base
 
   validates :body, presence: true, length: { in: 30..30000 }
 
+  default_scope { order best: :desc, created_at: :asc }
+
   def mark_best
     Answer.transaction do
-      self.question.answers.update_all best: false
+      self.question.answers.where(best: true).where.not(id: self.id).update_all best: false
       self.update best: true
     end
   end  
