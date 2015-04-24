@@ -11,7 +11,14 @@
               = f.text_area :body, class: 'form-control', rows: 10, id: dom_id(answer) + '_body'
             .form-group
               = f.submit 'Save answer', class: 'btn btn-primary'
-    .col-sm-3
+    .col-sm-4
+      - if answer.question.user_id == current_user.try(:id)
+        - if answer.best?
+          .text-success
+            = icon('thumbs-o-up')
+            |  Best answer!
+        - else
+          = link_to icon('arrow-circle-up')+' Mark as best', mark_best_question_answer_path(answer.question, answer), method: :patch, class: 'btn btn-success btn-sm', remote: true
       - if answer.user_id == current_user.try(:id)
         .btn-group.btn-group-sm
           = link_to icon('edit')+' Edit', edit_question_answer_path(answer.question, answer), data: {answer_id: answer.id}, class: 'answer-edit-button btn btn-default'
